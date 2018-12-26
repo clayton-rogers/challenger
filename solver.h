@@ -106,8 +106,10 @@ struct Challenger {
 
 		int num_solved = 0; // the number of numbers on the grid
 		int cur_square = 0; // the square we're currently on
-		int num_soln_found = 0; // number of solutions found to date
+		//int num_soln_found = 0; // number of solutions found to date
 		int first_empty = find_first_empty();
+
+		num_solved = find_num_solved();
 
 		while(1) {
 			if (square[cur_square] == 9) {
@@ -129,7 +131,6 @@ struct Challenger {
 				continue;
 			}
 
-
 			// check if we've been to this square before
 			if (square[cur_square] == 0) {
 				num_solved++;
@@ -145,9 +146,11 @@ struct Challenger {
 				break;
 			} else {
 				// move to the next non-original square
-				do {
-					++cur_square;
-				} while (is_orig[cur_square]);
+				if (cur_square != (4*4-1)) {
+					do {
+						++cur_square;
+					} while (is_orig[cur_square]);
+				}
 			}
 		} // end while
 	}
