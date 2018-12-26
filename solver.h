@@ -107,6 +107,18 @@ struct Challenger {
 			}
 		}
 	}
+	
+	//******
+	// whether a row is filled
+	//******
+	bool is_row_filled(int row) {
+		for (int col = 0; col < 4; ++col) {
+			if (square[row*4 + col] == 0) {
+				return false;
+			}
+		}
+		return true;
+	}
 
 	//******
 	// solves the puzzle
@@ -153,7 +165,7 @@ struct Challenger {
 			// check the state
 			//******
 			// if at least the first row is finished
-			if (cur_square >= (1*4 -1)) {
+			if (is_row_filled(0)) {
 				if (check_row(0)) {
 				} else {
 					continue;
@@ -161,11 +173,12 @@ struct Challenger {
 			} else {
 				do {
 					++cur_square;
-				} while (is_orig[cur_square] && cur_square<(4*4));
+				} while (cur_square< (4*4) && is_orig[cur_square]);
+				continue;
 			}
 
 			// if at least the second row is finished
-			if (cur_square >= (2*4 -1)) {
+			if (is_row_filled(1)) {
 				if (check_row(1)) {
 				} else {
 					continue;
@@ -173,10 +186,11 @@ struct Challenger {
 			} else {
 				do {
 					++cur_square;
-				} while (is_orig[cur_square] && cur_square<(4*4));
+				} while (cur_square< (4*4) && is_orig[cur_square]);
+				continue;
 			}
 			// if at least the third row is finished
-			if (cur_square >= (3*4 -1)) {
+			if (is_row_filled(2)) {
 				if (check_row(2)) {
 				} else {
 					continue;
@@ -184,7 +198,8 @@ struct Challenger {
 			} else {
 				do {
 					++cur_square;
-				} while (is_orig[cur_square] && cur_square<(4*4));
+				} while (cur_square< (4*4) && is_orig[cur_square]);
+				continue;
 			}
 			// if the full puzzle is finished
 			if (cur_square >= (4*4 -1)) {
@@ -196,7 +211,7 @@ struct Challenger {
 			} else {
 				do {
 					++cur_square;
-				} while (is_orig[cur_square] && cur_square<(4*4));
+				} while (cur_square< (4*4) && is_orig[cur_square]);
 			}
 
 /*
