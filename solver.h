@@ -15,7 +15,8 @@ struct Challenger {
 	bool is_good() {
 
 		// check all the rows
-		for (int row = 0; row < 4; ++row) {
+		// we check the last row first, since it's most likely to be wrong
+		for (int row = 3; row >= 0; --row) {
 			int sum = 0;
 			for (int col = 0; col < 4; ++col) {
 				sum += square[row*4 + col];
