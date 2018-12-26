@@ -1,0 +1,155 @@
+
+
+
+struct Challenger {
+	int square[4*4] = { 0 };
+	bool is_orig[4*4] = { false };
+	int side[4] = { 0 };
+	int bottom[4] = { 0 };
+	int top_corner = 0;
+	int bottom_corner = 0;
+
+	//******
+	// checks if the current state is good
+	//******
+	bool is_good() {
+
+		// check all the rows
+		for (int row = 0; row < 4; ++row) {
+			int sum = 0;
+			for (int col = 0; col < 4; ++col) {
+				sum += square[row*4 + col];
+			}
+			if (sum != side[row]) {
+				return false;
+			}
+		}
+
+		// check all the cols
+		for (int col = 0; col < 4; ++col) {
+			int sum = 0;
+			for (int row = 0; row < 4; ++row) {
+				sum += square[row*4 + col];
+			}
+			if (sum != bottom[col]) {
+				return false;
+			}
+		}
+
+		// check the two corners
+		{
+			int sum = 0;
+			for (int row_col = 0; row_col < 4; ++row_col) {
+				sum += square[row_col*4 + row_col];
+			}
+			if (sum != bottom_corner) {
+				return false;
+			}
+		}
+		{
+			int sum = 0;
+			for (int val = 0; val < 4; ++val) {
+				sum += square[val*4 + (3-val)];
+			}
+			if (sum != top_corner) {
+				return false;
+			}
+		}
+
+		return true; // if nothing has failed yet
+	}
+	
+	//******
+	// finds the first empty square
+	//******
+	int find_first_empty() {
+		for (int i = 0; i < (4*4); ++i) {
+			if (square[i] == 0) {
+				return i;
+			}
+		}
+
+		return (4*4 -1);
+	}
+
+	//******
+	// finds the number of squares solved
+	//******
+	int find_num_solved() {
+		int num = 0;
+		for (int i = 0; i < (4*4); ++i) {
+			if (square[i] != 0) {
+				++num;
+			}
+		}
+
+		return num;
+	}
+
+	//******
+	// sets all the orig flags at the beginning
+	//******
+	void set_orig() {
+		for (int i = 0; i < (4*4); ++i) {
+			if (square[i] != 0) {
+				is_orig[i] = true;
+			}
+		}
+	}
+
+	//******
+	// solves the puzzle
+	//******
+	void solve() {
+		set_orig();
+
+
+		int num_solved = 0; // the number of numbers on the grid
+		int cur_square = 0; // the square we're currently on
+		int num_soln_found = 0; // number of solutions found to date
+		int first_empty = find_first_empty();
+
+		while(1) {
+			if (square[cur_square] == 9) {
+
+				if (cur_square == first_empty) {
+					// std::cout << "End of searching..." << std::endl;
+					break;
+				}
+
+				// we have hit a dead end and must got back
+				square[cur_square] = 0;
+				num_solved--;
+
+				// backup and keep backing up till one that is not original
+				do {
+					cur_square--;
+				} while (is_orig[cur_square]);
+
+				continue;
+			}
+
+
+			// check if we've been to this square before
+			if (square[cur_square] == 0) {
+				num_solved++;
+			}
+
+			// either way, add one
+			square[cur_square]++;
+
+			// check the state
+			if (num_solved == (4*4) && is_good()) {
+				// TODO: continue finding solutions later
+				// but we're done now
+				break;
+			} else {
+				// move to the next non-original square
+				do {
+					++cur_square;
+				} while (is_orig[cur_square]);
+			}
+		} // end while
+	}
+
+};
