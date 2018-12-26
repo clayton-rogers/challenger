@@ -58,6 +58,17 @@ struct Challenger {
 
 		return true; // if nothing has failed yet
 	}
+
+	//******
+	// checks if just the first row is good
+	//******
+	bool check_row(int row) {
+		int sum = 0;
+		for (int col = 0; col < 4; ++col) {
+			sum += square[row*4 + col];
+		}
+		return sum == side[row];
+	}
 	
 	//******
 	// finds the first empty square
@@ -103,7 +114,6 @@ struct Challenger {
 	void solve() {
 		set_orig();
 
-
 		int num_solved = 0; // the number of numbers on the grid
 		int cur_square = 0; // the square we're currently on
 		//int num_soln_found = 0; // number of solutions found to date
@@ -139,19 +149,88 @@ struct Challenger {
 			// either way, add one
 			square[cur_square]++;
 
+			//******
 			// check the state
-			if (num_solved == (4*4) && is_good()) {
-				// TODO: continue finding solutions later
-				// but we're done now
-				break;
-			} else {
-				// move to the next non-original square
-				if (cur_square != (4*4-1)) {
-					do {
-						++cur_square;
-					} while (is_orig[cur_square]);
+			//******
+			// if at least the first row is finished
+			if (cur_square >= (1*4 -1)) {
+				if (check_row(0)) {
+				} else {
+					continue;
 				}
+			} else {
+				do {
+					++cur_square;
+				} while (is_orig[cur_square] && cur_square<(4*4));
 			}
+
+			// if at least the second row is finished
+			if (cur_square >= (2*4 -1)) {
+				if (check_row(1)) {
+				} else {
+					continue;
+				}
+			} else {
+				do {
+					++cur_square;
+				} while (is_orig[cur_square] && cur_square<(4*4));
+			}
+			// if at least the third row is finished
+			if (cur_square >= (3*4 -1)) {
+				if (check_row(2)) {
+				} else {
+					continue;
+				}
+			} else {
+				do {
+					++cur_square;
+				} while (is_orig[cur_square] && cur_square<(4*4));
+			}
+			// if the full puzzle is finished
+			if (cur_square >= (4*4 -1)) {
+				if (is_good()) {
+					break; // we're done here
+				} else {
+					continue;
+				}
+			} else {
+				do {
+					++cur_square;
+				} while (is_orig[cur_square] && cur_square<(4*4));
+			}
+
+/*
+
+			// check if we even have enough squares filled
+			if (num_solved == (4*4)) {  // TODO copied wrong???
+				do {
+					++cur_square;
+				} while (is_orig[cur_square] && cur_square<(4*4));
+
+				continue;
+			}
+			// check if the first row is good, else skip ahead
+			if (cur_square == 3 && !check_row(0)) {
+				// TODO
+				// set the current square to the end of the first row
+				//cur_square = 3;
+				// and zero out all the non orig numbers for the rest of the puzzle
+				//for (int i = 4; i < (4*4); ++i) {
+					//if (!is_orig[i]) {
+						//square[i] = 0;
+					//}
+				//}
+				continue;
+			}
+			// finally check if the whole state is good
+			if (!is_good()) {
+				continue;
+			}
+			// if we've made is this far then we must be good
+			// TODO: continue finding solutions later
+			break;
+
+*/
 		} // end while
 	}
 

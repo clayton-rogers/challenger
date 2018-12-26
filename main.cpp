@@ -2,6 +2,15 @@
 #include "solver.h"
 
 
+void print_challenge(const Challenger* c) {
+	for (int row = 0; row<4; ++row) {
+		for (int col = 0; col<4; ++col) {
+			std::cout << c->square[row*4 + col] << " ";
+		}
+		std::cout << std::endl;
+	}
+}
+
 
 int main(void) {
 
@@ -25,6 +34,8 @@ int main(void) {
 	c.bottom_corner = 25;
 
 	c.solve();
+
+	print_challenge(&c);
 
 	return 0;
 
