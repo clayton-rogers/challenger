@@ -208,8 +208,36 @@ struct Challenger {
 				}
 			} else {
 				square[cur_row*4 + last_col] = side[cur_row] - sum;
-				if (cur_row == 3) {
-					if (is_good()) {
+				// if the current row is 2, only the final row remains,
+				// which is immediately solvable
+				if (cur_row == 2) {
+					bool is_bad = false;
+					for (int col = 0; col < 4; ++col) {
+						if (is_orig[3*4 + col]) {
+							int sum = 0;
+							for (int row = 0; row < 4; ++row) {
+								sum += square[row*4 + col];
+							}
+							if (sum != bottom[col]) {
+								is_bad = true;
+							}
+						} else {
+							int sum = 0;
+							square[3*4 + col] = 0;
+							for (int row = 0; row < 4; ++row) {
+								sum += square[row*4 + col];
+							}
+							if (sum+1 > bottom[col] ||
+									sum+9 < bottom[col]) {
+								is_bad = true;
+								break;
+							} else {
+								square[3*4 + col] = bottom[col] - sum;
+							}
+						}
+					}
+
+					if (!is_bad && is_good()) {
 						return;
 					} else { // else keep incrementing
 						while (!increment_row(cur_row)) {
