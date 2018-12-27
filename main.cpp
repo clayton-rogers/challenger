@@ -15,23 +15,24 @@ void print_challenge(const Challenger* c) {
 int main(void) {
 
 	Challenger c;
-	c.square[0*4 + 1] = 3;
-	c.square[1*4 + 3] = 7;
-	c.square[2*4 + 2] = 8;
-	c.square[3*4 + 0] = 8;
+	c.square[0*4 + 2] = 4;
+	c.square[1*4 + 1] = 6;
+	c.square[2*4 + 3] = 5;
+	c.square[3*4 + 0] = 5;
+	c.set_orig();
 
-	c.side[0] = 14;
-	c.side[1] = 27;
-	c.side[2] = 15;
-	c.side[3] = 32;
+	c.side[0] = 28;
+	c.side[1] = 12;
+	c.side[2] = 20;
+	c.side[3] = 23;
 
-	c.bottom[0] = 12;
-	c.bottom[1] = 26;
-	c.bottom[2] = 33;
-	c.bottom[3] = 17;
-	
-	c.top_corner = 24;
-	c.bottom_corner = 25;
+	c.bottom[0] = 20;
+	c.bottom[1] = 16;
+	c.bottom[2] = 26;
+	c.bottom[3] = 21;
+
+	c.top_corner = 18;
+	c.bottom_corner = 31;
 
 	c.solve();
 
