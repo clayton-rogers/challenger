@@ -61,44 +61,6 @@ struct Challenger {
 	}
 
 	//******
-	// checks if just the first row is good
-	//******
-	bool check_row(byte row) {
-		byte sum = 0;
-		for (byte col = 0; col < 4; ++col) {
-			sum += square[row*4 + col];
-		}
-		return sum == side[row];
-	}
-	
-	//******
-	// finds the first empty square
-	//******
-	byte find_first_empty() {
-		for (byte i = 0; i < (4*4); ++i) {
-			if (square[i] == 0) {
-				return i;
-			}
-		}
-
-		return (4*4 -1);
-	}
-
-	//******
-	// finds the number of squares solved
-	//******
-	byte find_num_solved() {
-		byte num = 0;
-		for (byte i = 0; i < (4*4); ++i) {
-			if (square[i] != 0) {
-				++num;
-			}
-		}
-
-		return num;
-	}
-
-	//******
 	// sets all the orig flags at the beginning
 	//******
 	void set_orig() {
@@ -109,30 +71,6 @@ struct Challenger {
 		}
 	}
 	
-	//******
-	// whether a row is filled
-	//******
-	bool is_row_filled(byte row) {
-		for (byte col = 0; col < 4; ++col) {
-			if (square[row*4 + col] == 0) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	//******
-	// returns the position of the original for a given row
-	//******
-	byte get_orig_pos(byte row) {
-		for (byte col = 0; col < 4; ++col) {
-			if (is_orig[row*4 + col]) {
-				return col;
-			}
-		}
-		return 255;
-	}
-
 	//******
 	// prefills the empty squares
 	//******
