@@ -2,12 +2,12 @@
 
 
 struct Challenger {
-	int square[4*4] = { 0 };
+	byte square[4*4] = { 0 };
 	bool is_orig[4*4] = { false };
-	int side[4] = { 0 };
-	int bottom[4] = { 0 };
-	int top_corner = 0;
-	int bottom_corner = 0;
+	byte side[4] = { 0 };
+	byte bottom[4] = { 0 };
+	byte top_corner = 0;
+	byte bottom_corner = 0;
 
 	//******
 	// checks if the current state is good
@@ -16,9 +16,9 @@ struct Challenger {
 
 		// check all the rows
 		// we check the last row first, since it's most likely to be wrong
-		for (int row = 3; row >= 0; --row) {
-			int sum = 0;
-			for (int col = 0; col < 4; ++col) {
+		for (byte row = 0; row < 4; ++row) {
+			byte sum = 0;
+			for (byte col = 0; col < 4; ++col) {
 				sum += square[row*4 + col];
 			}
 			if (sum != side[row]) {
@@ -27,9 +27,9 @@ struct Challenger {
 		}
 
 		// check all the cols
-		for (int col = 0; col < 4; ++col) {
-			int sum = 0;
-			for (int row = 0; row < 4; ++row) {
+		for (byte col = 0; col < 4; ++col) {
+			byte sum = 0;
+			for (byte row = 0; row < 4; ++row) {
 				sum += square[row*4 + col];
 			}
 			if (sum != bottom[col]) {
@@ -39,8 +39,8 @@ struct Challenger {
 
 		// check the two corners
 		{
-			int sum = 0;
-			for (int row_col = 0; row_col < 4; ++row_col) {
+			byte sum = 0;
+			for (byte row_col = 0; row_col < 4; ++row_col) {
 				sum += square[row_col*4 + row_col];
 			}
 			if (sum != bottom_corner) {
@@ -48,8 +48,8 @@ struct Challenger {
 			}
 		}
 		{
-			int sum = 0;
-			for (int val = 0; val < 4; ++val) {
+			byte sum = 0;
+			for (byte val = 0; val < 4; ++val) {
 				sum += square[val*4 + (3-val)];
 			}
 			if (sum != top_corner) {
@@ -63,9 +63,9 @@ struct Challenger {
 	//******
 	// checks if just the first row is good
 	//******
-	bool check_row(int row) {
-		int sum = 0;
-		for (int col = 0; col < 4; ++col) {
+	bool check_row(byte row) {
+		byte sum = 0;
+		for (byte col = 0; col < 4; ++col) {
 			sum += square[row*4 + col];
 		}
 		return sum == side[row];
@@ -74,8 +74,8 @@ struct Challenger {
 	//******
 	// finds the first empty square
 	//******
-	int find_first_empty() {
-		for (int i = 0; i < (4*4); ++i) {
+	byte find_first_empty() {
+		for (byte i = 0; i < (4*4); ++i) {
 			if (square[i] == 0) {
 				return i;
 			}
@@ -87,9 +87,9 @@ struct Challenger {
 	//******
 	// finds the number of squares solved
 	//******
-	int find_num_solved() {
-		int num = 0;
-		for (int i = 0; i < (4*4); ++i) {
+	byte find_num_solved() {
+		byte num = 0;
+		for (byte i = 0; i < (4*4); ++i) {
 			if (square[i] != 0) {
 				++num;
 			}
@@ -102,7 +102,7 @@ struct Challenger {
 	// sets all the orig flags at the beginning
 	//******
 	void set_orig() {
-		for (int i = 0; i < (4*4); ++i) {
+		for (byte i = 0; i < (4*4); ++i) {
 			if (square[i] != 0) {
 				is_orig[i] = true;
 			}
@@ -112,8 +112,8 @@ struct Challenger {
 	//******
 	// whether a row is filled
 	//******
-	bool is_row_filled(int row) {
-		for (int col = 0; col < 4; ++col) {
+	bool is_row_filled(byte row) {
+		for (byte col = 0; col < 4; ++col) {
 			if (square[row*4 + col] == 0) {
 				return false;
 			}
@@ -124,8 +124,8 @@ struct Challenger {
 	//******
 	// returns the position of the original for a given row
 	//******
-	int get_orig_pos(int row) {
-		for (int col = 0; col < 4; ++col) {
+	byte get_orig_pos(byte row) {
+		for (byte col = 0; col < 4; ++col) {
 			if (is_orig[row*4 + col]) {
 				return col;
 			}
@@ -137,7 +137,7 @@ struct Challenger {
 	// prefills the empty squares
 	//******
 	void pre_fill_grid() {
-		for (int i = 0; i < (4*4); ++i) {
+		for (byte i = 0; i < (4*4); ++i) {
 			if (!is_orig[i]) {
 				square[i] = 1;
 			}
@@ -147,10 +147,10 @@ struct Challenger {
 	//******
 	// increments the first two non original values
 	//******
-	bool increment_row(int row) {
-		int* first = nullptr;
-		int* second = nullptr;
-		for (int i = 0; i < 4; ++i) {
+	bool increment_row(byte row) {
+		byte* first = nullptr;
+		byte* second = nullptr;
+		for (byte i = 0; i < 4; ++i) {
 			if (!is_orig[row*4 + i]) {
 				if (first == nullptr) {
 					first = &square[row*4 + i];
@@ -182,10 +182,10 @@ struct Challenger {
 		set_orig();
 		pre_fill_grid();
 
-		int cur_row = 0;
+		byte cur_row = 0;
 
 		while (1) {
-			int last_col = 99;
+			byte last_col = 99;
 
 			// get the last column to be solved
 			if (is_orig[cur_row*4 + 3]) {
@@ -196,8 +196,8 @@ struct Challenger {
 			
 			// solve the last col if possible
 			square[cur_row*4 + last_col] = 0;
-			int sum = 0;
-			for (int col = 0; col < 4; ++col) {
+			byte sum = 0;
+			for (byte col = 0; col < 4; ++col) {
 				sum += square[cur_row*4 + col];
 			}
 			if (sum+1 > side[cur_row] ||
@@ -212,19 +212,19 @@ struct Challenger {
 				// which is immediately solvable
 				if (cur_row == 2) {
 					bool is_bad = false;
-					for (int col = 0; col < 4; ++col) {
+					for (byte col = 0; col < 4; ++col) {
 						if (is_orig[3*4 + col]) {
-							int sum = 0;
-							for (int row = 0; row < 4; ++row) {
+							byte sum = 0;
+							for (byte row = 0; row < 4; ++row) {
 								sum += square[row*4 + col];
 							}
 							if (sum != bottom[col]) {
 								is_bad = true;
 							}
 						} else {
-							int sum = 0;
+							byte sum = 0;
 							square[3*4 + col] = 0;
-							for (int row = 0; row < 4; ++row) {
+							for (byte row = 0; row < 4; ++row) {
 								sum += square[row*4 + col];
 							}
 							if (sum+1 > bottom[col] ||

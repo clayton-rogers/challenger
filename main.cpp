@@ -1,4 +1,5 @@
 #include <iostream>
+typedef unsigned int byte;
 #include "solver.h"
 
 
