@@ -62,8 +62,15 @@ struct Challenger {
 
 	//******
 	// sets all the orig flags at the beginning
+	// this function should be re-entrant
 	//******
 	void set_orig() {
+		for (byte i = 0; i < (4*4); ++i) {
+			if (is_orig[i]) {
+				// don't need to do anything if the originals have already
+				// been determined.
+				return;
+			}
 		for (byte i = 0; i < (4*4); ++i) {
 			if (square[i] != 0) {
 				is_orig[i] = true;
@@ -73,10 +80,15 @@ struct Challenger {
 	
 	//******
 	// prefills the empty squares
+	// this fn should be reentrant
 	//******
 	void pre_fill_grid() {
 		for (byte i = 0; i < (4*4); ++i) {
 			if (!is_orig[i]) {
+				if (square[i] != 0) {
+					// if the squares already have values then don't need to prefill
+					return;
+				}
 				square[i] = 1;
 			}
 		}
