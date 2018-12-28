@@ -1,5 +1,5 @@
-CXXFLAGS:=-Wall -Wextra -pedantic -std=c++17 -O3 -g -pg
-LDFLAGS:=$(LDFLAGS) -pg
+CXXFLAGS:=-Wall -Wextra -pedantic -std=c++17 -O0 -g
+LDFLAGS:=$(LDFLAGS)
 
 #SRCS:=main.cpp
 SRCS:=$(shell find . -name "*.cpp")
