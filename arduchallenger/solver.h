@@ -71,6 +71,7 @@ struct Challenger {
 				// been determined.
 				return;
 			}
+		}
 		for (byte i = 0; i < (4*4); ++i) {
 			if (square[i] != 0) {
 				is_orig[i] = true;
@@ -128,7 +129,7 @@ struct Challenger {
 	//******
 	// solves the puzzle
 	//******
-	void solve() {
+	bool solve() {
 		set_orig();
 		pre_fill_grid();
 
@@ -154,6 +155,9 @@ struct Challenger {
 					sum+9 < side[cur_row]) {
 				// this is unsolvable so increment
 				while (!increment_row(cur_row)) {
+					if (cur_row == 0) {
+						return false;
+					}
 					--cur_row;
 				}
 			} else {
@@ -188,9 +192,12 @@ struct Challenger {
 					}
 
 					if (!is_bad && is_good()) {
-						return;
+						return true;
 					} else { // else keep incrementing
 						while (!increment_row(cur_row)) {
+							if (cur_row == 0) {
+								return false;
+							}
 							--cur_row;
 						}
 					}
