@@ -20,7 +20,6 @@ int main(void) {
 	c.square[1*4 + 1] = 6;
 	c.square[2*4 + 3] = 5;
 	c.square[3*4 + 0] = 5;
-	c.set_orig();
 
 	c.side[0] = 28;
 	c.side[1] = 12;
@@ -35,9 +34,9 @@ int main(void) {
 	c.top_corner = 18;
 	c.bottom_corner = 31;
 
-	c.solve();
-
-	print_challenge(&c);
+	while (c.solve()) {
+		print_challenge(&c);
+	}
 
 	return 0;
 
