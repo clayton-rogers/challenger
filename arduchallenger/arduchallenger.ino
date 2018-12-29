@@ -9,9 +9,15 @@
  * LCD R/W pin to ground
  * LCD VSS pin to ground
  * LCD VCC pin to 5V
- * 10K resistor:
+ *
+ * 10K pot:
  * ends to +5V and ground
  * wiper to LCD VO pin (pin 3)
+ *
+ * button minus one pin 8
+ * button plus one pin 9
+ * button plus five pin 10
+ * button enter pin 11
  */
 
 #include <LiquidCrystal.h>
