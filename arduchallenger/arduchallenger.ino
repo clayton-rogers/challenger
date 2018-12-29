@@ -166,30 +166,27 @@ void loop() {
 
 	wait_for_enter();
 
-	for (int i = 0; i < num_solutions; ++i) {
+	for (int sol = 0; sol < num_solutions; ++sol) {
 		lcd.clear();
 		lcd.setCursor(0,0);
 		for (int i = 0; i < 4; ++i) {
-			lcd.print(c.square[0*4 + i]);
+			lcd.print(solutions[sol].square[0*4 + i]);
 			lcd.print(" ");
 		}
 		for (int i = 0; i < 4; ++i) {
-			lcd.print(c.square[2*4 + i]);
+			lcd.print(solutions[sol].square[2*4 + i]);
 			lcd.print(" ");
 		}
 		lcd.setCursor(0,1);
 		for (int i = 0; i < 4; ++i) {
-			lcd.print(c.square[1*4 + i]);
+			lcd.print(solutions[sol].square[1*4 + i]);
 			lcd.print(" ");
 		}
 		for (int i = 0; i < 4; ++i) {
-			lcd.print(c.square[3*4 + i]);
+			lcd.print(solutions[sol].square[3*4 + i]);
 			lcd.print(" ");
 		}
 
 		wait_for_enter();
 	}
-
-	// reset after enter press
-	wait_for_enter();
 }
