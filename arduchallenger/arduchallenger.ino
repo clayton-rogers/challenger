@@ -134,10 +134,10 @@ void enter_values(
 }
 
 Challenger solutions[10];
-Challenger c;
 int num_solutions = 0;
 
 void loop() {
+	Challenger c;
 
 	for (byte row = 0; row < 4; ++row) {
 		enter_values(&c.square[row*4], String("Enter row ") + (row+1) + ":", 9);
