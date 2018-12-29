@@ -133,11 +133,11 @@ void enter_values(
 	}
 }
 
-
+Challenger solutions[10];
+Challenger c;
+int num_solutions = 0;
 
 void loop() {
-
-	Challenger c;
 
 	for (byte row = 0; row < 4; ++row) {
 		enter_values(&c.square[row*4], String("Enter row ") + (row+1) + ":", 9);
@@ -152,45 +152,42 @@ void loop() {
 	lcd.setCursor(0,0);
 	lcd.print("Solving...");
 	const unsigned long begin = millis();
-	c.solve();
+	while (c.solve()) {
+		solutions[num_solutions++] = c;
+	}
 	const unsigned long end = millis();
 	const unsigned long delta_t = end - begin;
 
-	// set the cursor to column 0, line 1
-	// (note: line 1 is the second row, since counting begins with 0):
 	lcd.clear();
 	lcd.setCursor(0, 0);
-	// print the number of seconds since reset:
-	lcd.print("Solve Time: ");
+	lcd.print(String("Found ") + num_solutions + " solutions");
 	lcd.setCursor(0,1);
-	lcd.print(String(delta_t) + " ms");
+	lcd.print(String("In: ") + delta_t + " ms");
 
 	wait_for_enter();
 
-	lcd.clear();
-	lcd.setCursor(0,0);
-	for (int i = 0; i < 4; ++i) {
-		lcd.print(c.square[0*4 + i]);
-		lcd.print(" ");
-	}
-	lcd.setCursor(0,1);
-	for (int i = 0; i < 4; ++i) {
-		lcd.print(c.square[1*4 + i]);
-		lcd.print(" ");
-	}
+	for (int i = 0; i < num_solutions; ++i) {
+		lcd.clear();
+		lcd.setCursor(0,0);
+		for (int i = 0; i < 4; ++i) {
+			lcd.print(c.square[0*4 + i]);
+			lcd.print(" ");
+		}
+		for (int i = 0; i < 4; ++i) {
+			lcd.print(c.square[2*4 + i]);
+			lcd.print(" ");
+		}
+		lcd.setCursor(0,1);
+		for (int i = 0; i < 4; ++i) {
+			lcd.print(c.square[1*4 + i]);
+			lcd.print(" ");
+		}
+		for (int i = 0; i < 4; ++i) {
+			lcd.print(c.square[3*4 + i]);
+			lcd.print(" ");
+		}
 
-	wait_for_enter();
-
-	lcd.clear();
-	lcd.setCursor(0,0);
-	for (int i = 0; i < 4; ++i) {
-		lcd.print(c.square[2*4 + i]);
-		lcd.print(" ");
-	}
-	lcd.setCursor(0,1);
-	for (int i = 0; i < 4; ++i) {
-		lcd.print(c.square[3*4 + i]);
-		lcd.print(" ");
+		wait_for_enter();
 	}
 
 	// reset after enter press
