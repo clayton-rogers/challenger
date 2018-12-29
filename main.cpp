@@ -36,6 +36,7 @@ int main(void) {
 
 	while (c.solve()) {
 		print_challenge(&c);
+		std::cout << std::endl;
 	}
 
 	return 0;

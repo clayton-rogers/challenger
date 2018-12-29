@@ -61,41 +61,6 @@ struct Challenger {
 	}
 
 	//******
-	// sets all the orig flags at the beginning
-	// this function should be re-entrant
-	//******
-	void set_orig() {
-		for (byte i = 0; i < (4*4); ++i) {
-			if (is_orig[i]) {
-				// don't need to do anything if the originals have already
-				// been determined.
-				return;
-			}
-		}
-		for (byte i = 0; i < (4*4); ++i) {
-			if (square[i] != 0) {
-				is_orig[i] = true;
-			}
-		}
-	}
-	
-	//******
-	// prefills the empty squares
-	// this fn should be reentrant
-	//******
-	void pre_fill_grid() {
-		for (byte i = 0; i < (4*4); ++i) {
-			if (!is_orig[i]) {
-				if (square[i] != 0) {
-					// if the squares already have values then don't need to prefill
-					return;
-				}
-				square[i] = 1;
-			}
-		}
-	}
-
-	//******
 	// increments the first two non original values
 	//******
 	bool increment_row(byte row) {
@@ -112,8 +77,8 @@ struct Challenger {
 			}
 		}
 		if (*first == 9 && *second == 9) {
-			*first = 0;
-			*second = 0;
+			*first = 1;
+			*second = 1;
 			return false;
 		}
 		if (*second == 9) {
@@ -130,8 +95,36 @@ struct Challenger {
 	// solves the puzzle
 	//******
 	bool solve() {
-		set_orig();
-		pre_fill_grid();
+		// whether this puzzle already has a solution and
+		// we should be finding the next one
+		bool has_solution = false;
+
+		for (byte i = 0; i < (4*4); ++i) {
+			if (is_orig[i]) {
+				has_solution = true;
+				break;
+			}
+		}
+
+		if (has_solution) {
+			// if there's already a solution, we need to increment once,
+			// then find the next one
+			increment_row(2);
+		} else {
+			// sets all the filled squares to be original
+			for (byte i = 0; i < (4*4); ++i) {
+				if (square[i] != 0) {
+					is_orig[i] = true;
+				}
+			}
+
+			// sets all non original squares to 1
+			for (byte i = 0; i < (4*4); ++i) {
+				if (!is_orig[i]) {
+					square[i] = 1;
+				}
+			}
+		}
 
 		byte cur_row = 0;
 
