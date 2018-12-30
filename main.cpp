@@ -52,6 +52,25 @@ int main(void) {
 	b.top_corner = 17;
 	b.bottom_corner = 27;
 
+	Challenger c;
+	c.square[0*4 + 0] = 9;
+	c.square[1*4 + 1] = 6;
+	c.square[2*4 + 2] = 9;
+	c.square[3*4 + 3] = 7;
+
+	c.side[0] = 28;
+	c.side[1] = 12;
+	c.side[2] = 20;
+	c.side[3] = 23;
+
+	c.bottom[0] = 20;
+	c.bottom[1] = 16;
+	c.bottom[2] = 26;
+	c.bottom[3] = 21;
+
+	c.top_corner = 18;
+	c.bottom_corner = 31;
+
 	std::cout << "Puzzle a" << std::endl;
 	while (a.solve()) {
 		print_challenge(&a);
@@ -60,6 +79,13 @@ int main(void) {
 	std::cout << "Puzzle b" << std::endl;
 	while (b.solve()) {
 		print_challenge(&b);
+		std::cout << std::endl;
+	}
+	std::cout << "Puzzle c" << std::endl;
+	int num = 0;
+	while (c.solve()) {
+		std::cout << ++num << std::endl;
+		print_challenge(&c);
 		std::cout << std::endl;
 	}
 
