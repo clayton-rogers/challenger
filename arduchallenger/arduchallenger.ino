@@ -42,21 +42,16 @@ enum class Input_pin {
 void setup() {
 	// set up the LCD's number of columns and rows:
 	lcd.begin(16, 2);
-	// Print a message to the LCD.
-	lcd.print("hello, world!");
 
 	// setup buttons
 	pinMode(PIN_MINUS_ONE, INPUT_PULLUP);
 	pinMode(PIN_PLUS_ONE, INPUT_PULLUP);
 	pinMode(PIN_PLUS_FIVE, INPUT_PULLUP);
 	pinMode(PIN_ENTER, INPUT_PULLUP);
-
-	Serial.begin(115200);
 }
 
 Input_pin get_next_input() {
 	Input_pin ret_val;
-	Serial.println("Getting key");
 	while (1) {
 		if (digitalRead(PIN_MINUS_ONE) == LOW) {
 			ret_val = Input_pin::MINUS_ONE;
@@ -75,16 +70,12 @@ Input_pin get_next_input() {
 			break;
 		}
 	}
-	Serial.println("Waiting for debounce");
 	// wait for debounce
 	delay(200);
-	Serial.println("Waiting for release");
 	while (digitalRead(PIN_MINUS_ONE) == LOW ||
 			digitalRead(PIN_PLUS_ONE) == LOW ||
 			digitalRead(PIN_PLUS_FIVE) == LOW ||
 			digitalRead(PIN_ENTER) == LOW) {}
-
-	Serial.println("Returning value");
 
 	return ret_val;
 }
@@ -146,17 +137,17 @@ void loop() {
 	int num_solutions = 0;
 
 	for (byte row = 0; row < 4; ++row) {
-		enter_values(&c.square[row*4], String("Enter row ") + (row+1) + ":", 9);
+		enter_values(&c.square[row*4], String(F("Enter row ")) + (row+1) + ":", 9);
 	}
-	enter_values(&c.side[0], String("Enter side:"), 36);
-	enter_values(&c.bottom[0], String("Enter bottom:"), 36);
+	enter_values(&c.side[0], String(F("Enter side:")), 36);
+	enter_values(&c.bottom[0], String(F("Enter bottom:")), 36);
 
-	enter_values(&c.top_corner, String("Enter top corner"), 36, true);
-	enter_values(&c.bottom_corner, String("Enter bot corner"), 36, true);
+	enter_values(&c.top_corner, String(F("Enter top corner")), 36, true);
+	enter_values(&c.bottom_corner, String(F("Enter bot corner")), 36, true);
 
 	lcd.clear();
 	lcd.setCursor(0,0);
-	lcd.print("Solving...");
+	lcd.print(F("Solving..."));
 	const unsigned long begin = millis();
 	while (c.solve()) {
 		solutions[num_solutions++] = c;
@@ -166,7 +157,7 @@ void loop() {
 
 	lcd.clear();
 	lcd.setCursor(0, 0);
-	lcd.print(String("Found ") + num_solutions + " solutions");
+	lcd.print(String(F("Found ")) + num_solutions + F(" solutions"));
 	lcd.setCursor(0,1);
 	lcd.print(String("In: ") + delta_t + " ms");
 
