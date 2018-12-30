@@ -130,7 +130,8 @@ void enter_values(
 	}
 }
 
-Challenger solutions[10];
+const int MAX_SOL = 25;
+Challenger solutions[MAX_SOL];
 
 void loop() {
 	Challenger c;
@@ -150,18 +151,29 @@ void loop() {
 	lcd.print(F("Solving..."));
 	const unsigned long begin = millis();
 	while (c.solve()) {
-		solutions[num_solutions++] = c;
+		if (num_solutions < MAX_SOL) {
+			solutions[num_solutions] = c;
+		}
+		++num_solutions;
 	}
 	const unsigned long end = millis();
 	const unsigned long delta_t = end - begin;
 
 	lcd.clear();
 	lcd.setCursor(0, 0);
-	lcd.print(String(F("Found ")) + num_solutions + F(" solutions"));
+	lcd.print(String(F("Found ")) + num_solutions + F(" sol"));
 	lcd.setCursor(0,1);
 	lcd.print(String("In: ") + delta_t + " ms");
-
 	wait_for_enter();
+
+	if (num_solutions >= MAX_SOL) {
+		lcd.clear();
+		lcd.setCursor(0,0);
+		lcd.print(F("Only showing the"));
+		lcd.setCursor(0,1);
+		lcd.print(String(F("first ")) + MAX_SOL);
+		wait_for_enter();
+	}
 
 	for (int sol = 0; sol < num_solutions; ++sol) {
 		lcd.clear();
