@@ -1,12 +1,12 @@
 #include <iostream>
-typedef unsigned int byte;
+typedef unsigned char byte;
 #include "solver.h"
 
 
 void print_challenge(const Challenger* c) {
 	for (int row = 0; row<4; ++row) {
 		for (int col = 0; col<4; ++col) {
-			std::cout << c->square[row*4 + col] << " ";
+			std::cout << static_cast<int>(c->square[row*4 + col]) << " ";
 		}
 		std::cout << std::endl;
 	}
