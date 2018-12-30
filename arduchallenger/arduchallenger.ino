@@ -23,6 +23,8 @@
 #include <LiquidCrystal.h>
 #include "solver.h"
 
+//#define OPT_SERIAL
+
 const int rs = 2, en = 3, d4 = 4, d5 = 5, d6 = 6, d7 = 7;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
@@ -43,12 +45,29 @@ void setup() {
 	// set up the LCD's number of columns and rows:
 	lcd.begin(16, 2);
 
+#if defined(OPT_SERIAL)
+	Serial.begin(115200);
+#endif
+
 	// setup buttons
 	pinMode(PIN_MINUS_ONE, INPUT_PULLUP);
 	pinMode(PIN_PLUS_ONE, INPUT_PULLUP);
 	pinMode(PIN_PLUS_FIVE, INPUT_PULLUP);
 	pinMode(PIN_ENTER, INPUT_PULLUP);
 }
+
+#if defined(OPT_SERIAL)
+void print_challenger(const Challenger& c) {
+	for (byte row = 0; row < 4; ++row) {
+		for (byte col = 0; col < 4; ++col) {
+			Serial.print(c.square[row*4 + col]);
+			Serial.print(' ');
+		}
+		Serial.println();
+	}
+	Serial.println();
+}
+#endif
 
 Input_pin get_next_input() {
 	Input_pin ret_val;
@@ -151,6 +170,9 @@ void loop() {
 	lcd.print(F("Solving..."));
 	const unsigned long begin = millis();
 	while (c.solve()) {
+#if defined(OPT_SERIAL)
+		print_challenger(c);
+#endif
 		if (num_solutions < MAX_SOL) {
 			solutions[num_solutions] = c;
 		}
@@ -175,7 +197,9 @@ void loop() {
 		wait_for_enter();
 	}
 
-	for (int sol = 0; sol < num_solutions; ++sol) {
+	const int num_sol_to_display = (num_solutions < MAX_SOL) ? num_solutions : MAX_SOL;
+
+	for (int sol = 0; sol < num_sol_to_display; ++sol) {
 		lcd.clear();
 		lcd.setCursor(0,0);
 		for (int i = 0; i < 4; ++i) {
