@@ -9,6 +9,10 @@ struct Challenger {
 	byte top_corner = 0;
 	byte bottom_corner = 0;
 
+	int operator==(const Challenger& other) {
+		return memcmp(this, &other, sizeof(Challenger));
+	}
+
 	//******
 	// checks if the current state is good
 	//******
