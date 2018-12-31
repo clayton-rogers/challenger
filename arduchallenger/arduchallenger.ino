@@ -61,22 +61,22 @@ void setup() {
 
 	// setup the benchmark puzzle
 	bench_puzzle.square[0*4 + 0] = 9;
-	bench_puzzle.square[1*4 + 1] = 6;
-	bench_puzzle.square[2*4 + 2] = 9;
-	bench_puzzle.square[3*4 + 3] = 7;
+	bench_puzzle.square[1*4 + 1] = 9;
+	bench_puzzle.square[2*4 + 2] = 7;
+	bench_puzzle.square[3*4 + 3] = 2;
 
-	bench_puzzle.side[0] = 28;
-	bench_puzzle.side[1] = 12;
-	bench_puzzle.side[2] = 20;
-	bench_puzzle.side[3] = 23;
+	bench_puzzle.side[0] = 15;
+	bench_puzzle.side[1] = 27;
+	bench_puzzle.side[2] = 18;
+	bench_puzzle.side[3] = 13;
 
-	bench_puzzle.bottom[0] = 20;
-	bench_puzzle.bottom[1] = 16;
-	bench_puzzle.bottom[2] = 26;
-	bench_puzzle.bottom[3] = 21;
+	bench_puzzle.bottom[0] = 28;
+	bench_puzzle.bottom[1] = 15;
+	bench_puzzle.bottom[2] = 15;
+	bench_puzzle.bottom[3] = 15;
 
-	bench_puzzle.top_corner = 18;
-	bench_puzzle.bottom_corner = 31;
+	bench_puzzle.top_corner = 17;
+	bench_puzzle.bottom_corner = 27;
 }
 
 #if defined(OPT_SERIAL)
