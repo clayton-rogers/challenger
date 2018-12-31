@@ -1,7 +1,7 @@
 #ifndef SOLVER_H
 #define SOLVER_H
 
-#if defined(ARDUINO_AVR_UNO)
+#if defined(__AVR__)
 
 #include <Arduino.h>
 
