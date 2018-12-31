@@ -28,6 +28,8 @@
 const int rs = 2, en = 3, d4 = 4, d5 = 5, d6 = 6, d7 = 7;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
+const int MAX_SOL = 25;
+Challenger solutions[MAX_SOL];
 
 const byte PIN_MINUS_ONE = 8;
 const byte PIN_PLUS_ONE = 9;
@@ -40,6 +42,8 @@ enum class Input_pin {
 	PLUS_FIVE,
 	ENTER
 };
+
+Challenger bench_puzzle;
 
 void setup() {
 	// set up the LCD's number of columns and rows:
@@ -54,6 +58,25 @@ void setup() {
 	pinMode(PIN_PLUS_ONE, INPUT_PULLUP);
 	pinMode(PIN_PLUS_FIVE, INPUT_PULLUP);
 	pinMode(PIN_ENTER, INPUT_PULLUP);
+
+	// setup the benchmark puzzle
+	bench_puzzle.square[0*4 + 0] = 9;
+	bench_puzzle.square[1*4 + 1] = 6;
+	bench_puzzle.square[2*4 + 2] = 9;
+	bench_puzzle.square[3*4 + 3] = 7;
+
+	bench_puzzle.side[0] = 28;
+	bench_puzzle.side[1] = 12;
+	bench_puzzle.side[2] = 20;
+	bench_puzzle.side[3] = 23;
+
+	bench_puzzle.bottom[0] = 20;
+	bench_puzzle.bottom[1] = 16;
+	bench_puzzle.bottom[2] = 26;
+	bench_puzzle.bottom[3] = 21;
+
+	bench_puzzle.top_corner = 18;
+	bench_puzzle.bottom_corner = 31;
 }
 
 #if defined(OPT_SERIAL)
@@ -149,13 +172,7 @@ void enter_values(
 	}
 }
 
-const int MAX_SOL = 25;
-Challenger solutions[MAX_SOL];
-
-void loop() {
-	Challenger c;
-	int num_solutions = 0;
-
+void enter_puzzle(Challenger& c) {
 	for (byte row = 0; row < 4; ++row) {
 		enter_values(&c.square[row*4], String(F("Enter row ")) + (row+1) + ":", 9);
 	}
@@ -165,9 +182,14 @@ void loop() {
 	enter_values(&c.top_corner, String(F("Enter top corner")), 36, true);
 	enter_values(&c.bottom_corner, String(F("Enter bot corner")), 36, true);
 
+}
+
+void solve_and_display_puzzle(Challenger& c) {
 	lcd.clear();
 	lcd.setCursor(0,0);
 	lcd.print(F("Solving..."));
+
+	int num_solutions = 0;
 	const unsigned long begin = millis();
 	while (c.solve()) {
 #if defined(OPT_SERIAL)
@@ -222,4 +244,57 @@ void loop() {
 
 		wait_for_enter();
 	}
+}
+
+enum class Solve_Choice {
+	SOLVE,
+	BENCH
+};
+
+void loop() {
+	Solve_Choice solve_choice = Solve_Choice::SOLVE;
+	bool done = false;
+	while (!done) {
+		lcd.clear();
+		lcd.setCursor(0,0);
+		lcd.print(F("Puzzle Solver"));
+		lcd.setCursor(0,1);
+		if (solve_choice == Solve_Choice::SOLVE) {
+			lcd.print(F(">"));
+		} else {
+			lcd.print(F(" "));
+		}
+		lcd.print(F(" Solve "));
+		if (solve_choice == Solve_Choice::BENCH) {
+			lcd.print(F(">"));
+		} else {
+			lcd.print(F(" "));
+		}
+		lcd.print(F(" Bench "));
+
+		auto input = get_next_input();
+		switch (input) {
+			case Input_pin::MINUS_ONE:
+			case Input_pin::PLUS_ONE:
+			case Input_pin::PLUS_FIVE:
+				if (solve_choice == Solve_Choice::SOLVE) {
+					solve_choice = Solve_Choice::BENCH;
+				} else {
+					solve_choice = Solve_Choice::SOLVE;
+				}
+				break;
+			case Input_pin::ENTER:
+				done = true;
+				break;
+		}
+	}
+
+	Challenger c;
+
+	if (solve_choice == Solve_Choice::SOLVE) {
+		enter_puzzle(c);
+	} else {
+		c = bench_puzzle;
+	}
+	solve_and_display_puzzle(c);
 }
