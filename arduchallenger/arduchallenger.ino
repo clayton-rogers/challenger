@@ -122,8 +122,20 @@ Input_pin get_next_input() {
 	return ret_val;
 }
 
-void wait_for_enter() {
-	while (get_next_input() != Input_pin::ENTER) {}
+void wait_for_enter(bool& skip) {
+	while (true) {
+		auto input = get_next_input();
+		switch(input) {
+			case Input_pin::ENTER:
+				skip = false;
+				return;
+			case Input_pin::MINUS_ONE:
+				skip = true;
+				return;
+			default:
+				break;
+		}
+	}
 }
 
 void enter_values(
@@ -208,7 +220,8 @@ void solve_and_display_puzzle(Challenger& c) {
 	lcd.print(String(F("Found ")) + num_solutions + F(" sol"));
 	lcd.setCursor(0,1);
 	lcd.print(String("In: ") + delta_t + " ms");
-	wait_for_enter();
+	bool unused;
+	wait_for_enter(unused);
 
 	if (num_solutions >= MAX_SOL) {
 		lcd.clear();
@@ -216,7 +229,7 @@ void solve_and_display_puzzle(Challenger& c) {
 		lcd.print(F("Only showing the"));
 		lcd.setCursor(0,1);
 		lcd.print(String(F("first ")) + MAX_SOL);
-		wait_for_enter();
+		wait_for_enter(unused);
 	}
 
 	const int num_sol_to_display = (num_solutions < MAX_SOL) ? num_solutions : MAX_SOL;
@@ -242,7 +255,11 @@ void solve_and_display_puzzle(Challenger& c) {
 			lcd.print(" ");
 		}
 
-		wait_for_enter();
+		bool skip;
+		wait_for_enter(skip);
+		if (skip) {
+			break;
+		}
 	}
 }
 
