@@ -10,6 +10,7 @@ challenger: $(OBJS)
 
 .PHONY: clean
 clean:
+	$(RM) arduchallenger/*.o
 	$(RM) *.o
 	$(RM) challenger
 
