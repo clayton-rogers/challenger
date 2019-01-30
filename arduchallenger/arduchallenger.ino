@@ -22,10 +22,11 @@
 
 #include <LiquidCrystal.h>
 #include "solver.h"
+#include "mario.h"
 
 //#define OPT_SERIAL
 
-const int rs = 2, en = 3, d4 = 4, d5 = 5, d6 = 6, d7 = 7;
+const int rs = 2, en = 3, d4 = 4, d5 = 12, d6 = 6, d7 = 7;
 LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
 const int MAX_SOL = 25;
@@ -35,6 +36,7 @@ const byte PIN_MINUS_ONE = 8;
 const byte PIN_PLUS_ONE = 9;
 const byte PIN_PLUS_FIVE = 10;
 const byte PIN_ENTER = 11;
+const byte PIN_BUZZER = 5;
 
 enum class Input_pin {
 	MINUS_ONE,
@@ -58,6 +60,7 @@ void setup() {
 	pinMode(PIN_PLUS_ONE, INPUT_PULLUP);
 	pinMode(PIN_PLUS_FIVE, INPUT_PULLUP);
 	pinMode(PIN_ENTER, INPUT_PULLUP);
+	pinMode(PIN_BUZZER, OUTPUT);
 
 	// setup the benchmark puzzle
 	bench_puzzle.square[0*4 + 0] = 9;
@@ -77,6 +80,10 @@ void setup() {
 
 	bench_puzzle.top_corner = 17;
 	bench_puzzle.bottom_corner = 27;
+}
+
+void play_mario() {
+
 }
 
 #if defined(OPT_SERIAL)
@@ -269,6 +276,8 @@ enum class Solve_Choice {
 };
 
 void loop() {
+	play_mario(PIN_BUZZER);
+
 	Solve_Choice solve_choice = Solve_Choice::SOLVE;
 	bool done = false;
 	while (!done) {
