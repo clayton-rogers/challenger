@@ -69,22 +69,47 @@ const int noteDurations[] = {
 
 static_assert(sizeof(melody) == sizeof(noteDurations), "Melody and note lengths should be equal");
 
-void play_mario(int pin) {
-	const int number_of_notes = sizeof(melody)/sizeof(melody[0]);
-	// iterate over the notes of the melody:
-	for (int thisNote = 0; thisNote < number_of_notes; thisNote++) {
+const int number_of_notes = sizeof(melody)/sizeof(melody[0]);
 
+void update_mario(int pin) {
+	static int thisNote = 0;
+	static unsigned long next_time = millis();
+
+	unsigned long current_time = millis();
+
+	// If we have not yet hit the designated time, do nothing
+	if (current_time < next_time) {
+		return;
+	}
+
+	static bool currently_playing = false;
+
+	if (!currently_playing) {
 		// to calculate the note duration, take one second divided by the note type.
 		//e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
 		int noteDuration = 1000 / noteDurations[thisNote];
 		tone(pin, melody[thisNote], noteDuration);
 
+		next_time = current_time + noteDuration;
+
+		currently_playing = true;
+	} else {
+		noTone(pin); // Probably not required? Docs say no effect if no tone is being played.
+
+		// to calculate the note duration, take one second divided by the note type.
+		//e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
+		int noteDuration = 1000 / noteDurations[thisNote];
 		// to distinguish the notes, set a minimum time between them.
 		// the note's duration + 30% seems to work well:
-		int pauseBetweenNotes = noteDuration * 1.30;
-		delay(pauseBetweenNotes);
-		// stop the tone playing:
-		noTone(pin);
+		int pauseBetweenNotes = noteDuration * 0.3;//1.30;
+
+		next_time = current_time + pauseBetweenNotes;
+
+		++thisNote;
+		if (thisNote == number_of_notes) {
+			thisNote = 0;
+		}
+		currently_playing = false;
 	}
 }
 

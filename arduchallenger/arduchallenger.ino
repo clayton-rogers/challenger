@@ -102,6 +102,9 @@ void print_challenger(const Challenger& c) {
 Input_pin get_next_input() {
 	Input_pin ret_val;
 	while (1) {
+
+		update_mario(PIN_BUZZER);
+
 		if (digitalRead(PIN_MINUS_ONE) == LOW) {
 			ret_val = Input_pin::MINUS_ONE;
 			break;
@@ -120,11 +123,14 @@ Input_pin get_next_input() {
 		}
 	}
 	// wait for debounce
-	delay(200);
+	for (int i = 0; i < 200; ++i) {
+		delay(1);
+		update_mario(PIN_BUZZER);
+	}
 	while (digitalRead(PIN_MINUS_ONE) == LOW ||
-			digitalRead(PIN_PLUS_ONE) == LOW ||
-			digitalRead(PIN_PLUS_FIVE) == LOW ||
-			digitalRead(PIN_ENTER) == LOW) {}
+	       digitalRead(PIN_PLUS_ONE) == LOW ||
+	       digitalRead(PIN_PLUS_FIVE) == LOW ||
+	       digitalRead(PIN_ENTER) == LOW) {}
 
 	return ret_val;
 }
@@ -276,7 +282,6 @@ enum class Solve_Choice {
 };
 
 void loop() {
-	play_mario(PIN_BUZZER);
 
 	Solve_Choice solve_choice = Solve_Choice::SOLVE;
 	bool done = false;
