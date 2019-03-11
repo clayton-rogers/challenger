@@ -4,7 +4,7 @@
 #include "pitches.h"
 
 // notes in the melody:
-const int melody[] = {
+const int melody[] PROGMEM = {
 	//NOTE_C4, NOTE_G3, NOTE_G3, NOTE_A3, NOTE_G3, 0, NOTE_B3, NOTE_C4
 
 	NOTE_E5, NOTE_E5, 0, NOTE_E5,
@@ -36,7 +36,7 @@ const int melody[] = {
 };
 
 // note durations: 4 = quarter note, 8 = eighth note, etc.:
-const int noteDurations[] = {
+const int noteDurations[] PROGMEM = {
 	//4, 8, 8, 4, 4, 4, 4, 4
 
 	12, 12, 12, 12,
@@ -87,8 +87,11 @@ void update_mario(int pin) {
 	if (!currently_playing) {
 		// to calculate the note duration, take one second divided by the note type.
 		//e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
-		int noteDuration = 1000 / noteDurations[thisNote];
-		tone(pin, melody[thisNote], noteDuration);
+		const int noteBeats = pgm_read_word_near(noteDurations + thisNote);
+		const int notePitch = pgm_read_word_near(melody + thisNote);
+
+		int noteDuration = 1000 / noteBeats;
+		tone(pin, notePitch, noteDuration);
 
 		next_time = current_time + noteDuration;
 
@@ -98,7 +101,8 @@ void update_mario(int pin) {
 
 		// to calculate the note duration, take one second divided by the note type.
 		//e.g. quarter note = 1000 / 4, eighth note = 1000/8, etc.
-		int noteDuration = 1000 / noteDurations[thisNote];
+		const int noteBeats = pgm_read_word_near(noteDurations + thisNote);
+		int noteDuration = 1000 / noteBeats;
 		// to distinguish the notes, set a minimum time between them.
 		// the note's duration + 30% seems to work well:
 		int pauseBetweenNotes = noteDuration * 0.3;//1.30;
