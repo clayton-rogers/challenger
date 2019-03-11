@@ -1,11 +1,11 @@
 /*
 	 The circuit:
- * LCD RS pin to digital pin 12
- * LCD Enable pin to digital pin 11
- * LCD D4 pin to digital pin 5
- * LCD D5 pin to digital pin 4
- * LCD D6 pin to digital pin 3
- * LCD D7 pin to digital pin 2
+ * LCD RS pin to digital pin 2
+ * LCD Enable pin to digital pin 3
+ * LCD D4 pin to digital pin 4
+ * LCD D5 pin to digital pin 12
+ * LCD D6 pin to digital pin 6
+ * LCD D7 pin to digital pin 7
  * LCD R/W pin to ground
  * LCD VSS pin to ground
  * LCD VCC pin to 5V
@@ -18,6 +18,8 @@
  * button plus one pin 9
  * button plus five pin 10
  * button enter pin 11
+ *
+ * buzzer pin 5
  */
 
 #include <LiquidCrystal.h>
